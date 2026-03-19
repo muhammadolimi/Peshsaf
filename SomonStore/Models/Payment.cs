@@ -7,7 +7,6 @@ namespace SomonStore.Models
 {
     public class Payment
     {
-        [Key]
         public int Id { get; set; }
         public int OrderId { get; set; }
         public Order Order { get; set; }
