@@ -16,11 +16,6 @@ namespace SomonStore.Models
         public DbSet<UserRole> UserRoles { get; set; } = null!;
         public DbSet<Promotion> Promotions { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            options.UseNpgsql("Host=localhost;Port=5432;Database=SomonStore_db;Username=postgres;Password=2005");
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShopDbContext).Assembly);
