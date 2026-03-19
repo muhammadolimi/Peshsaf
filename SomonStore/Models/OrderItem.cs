@@ -7,7 +7,6 @@ namespace SomonStore.Models
 {
     public class OrderItem
     {
-        [Key]
         public int Id { get; set; }
         
         public int OrderId { get; set; }
