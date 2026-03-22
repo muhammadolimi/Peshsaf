@@ -4,7 +4,10 @@ namespace SomonStore.Models
 {
     public class ShopDbContext : DbContext
     {
-        public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options) { }
+        public ShopDbContext(DbContextOptions<ShopDbContext> options)
+            : base(options)
+        {
+        }
 
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
