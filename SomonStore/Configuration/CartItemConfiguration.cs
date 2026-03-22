@@ -13,13 +13,19 @@ namespace SomonStore.Configuration
     {
         public void Configure(EntityTypeBuilder<CartItem> builder)
         {
+            builder.Property(ci => ci.Quantity).IsRequired();
+
             builder.HasOne(ci => ci.Cart)
-                .WithMany()
-                .HasForeignKey(ci => ci.CartId);
+                .WithMany(c => c.Items)
+                .HasForeignKey(ci => ci.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(ci => ci.Product)
-                .WithMany()
-                .HasForeignKey(ci => ci.ProductId);
+                .WithMany(p => p.CartItems)
+                .HasForeignKey(ci => ci.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(ci => new { ci.CartId, ci.ProductId }).IsUnique();
         }
     }
 }

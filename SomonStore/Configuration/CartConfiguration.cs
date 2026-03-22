@@ -13,8 +13,16 @@ namespace SomonStore.Configuration
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
             builder.HasOne(c => c.User)
-                .WithOne()
-                .HasForeignKey<Cart>(c => c.UserId);
+                .WithOne(u => u.Cart)
+                .HasForeignKey<Cart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(c => c.Items)
+                .WithOne(i => i.Cart)
+                .HasForeignKey(i => i.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(c => c.UserId).IsUnique();
         }
     }
 }

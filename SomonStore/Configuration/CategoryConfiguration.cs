@@ -13,9 +13,17 @@ namespace SomonStore.Configuration
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
+            builder.Property(c => c.Name).IsRequired().HasMaxLength(100);
+
             builder.HasOne(c => c.Parent)
-                .WithMany()
-                .HasForeignKey(c => c.ParentId);
+                .WithMany(c => c.Children)
+                .HasForeignKey(c => c.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(c => c.Products)
+                .WithOne(p => p.Category)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

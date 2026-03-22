@@ -12,10 +12,20 @@ namespace SomonStore.Configuration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.Property(u => u.Login).IsRequired().HasMaxLength(50);
+            builder.Property(u => u.Password).IsRequired().HasMaxLength(255);
+            builder.Property(u => u.Email).IsRequired().HasMaxLength(100);
+            builder.Property(u => u.Name).IsRequired().HasMaxLength(100);
+            builder.Property(u => u.BonusBalance).HasColumnType("decimal(18,2)");
+
+            builder.HasIndex(u => u.Login).IsUnique();
+            builder.HasIndex(u => u.Email).IsUnique();
+
             builder.HasOne(u => u.UserRole)
-                .WithMany()
-                .HasForeignKey(u => u.RoleId);
-                
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

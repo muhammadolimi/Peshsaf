@@ -12,9 +12,17 @@ namespace SomonStore.Configuration
     {
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
+            builder.Property(p => p.Total).HasColumnType("decimal(18,2)");
+
             builder.HasOne(p => p.Order)
-                .WithOne()
-                .HasForeignKey<Payment>(p => p.OrderId);
+                .WithOne(o => o.Payment)
+                .HasForeignKey<Payment>(p => p.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(p => p.Method)
+                .WithMany(m => m.Payments)
+                .HasForeignKey(p => p.MethodId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
