@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SomonStore.Models;
-using System.Linq;
 
 namespace SomonStore.Controllers
 {
@@ -14,14 +13,29 @@ namespace SomonStore.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? search, int? categoryId)
         {
-            var products = _context.Products
+            var query = _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Promotion)
-                .ToList();
+                .AsQueryable();
 
-            return View(products);
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(p => p.Name.Contains(search) || p.Description.Contains(search));
+            }
+
+            if (categoryId.HasValue)
+            {
+                var categoryIds = GetCategoryTreeIds(categoryId.Value);
+                query = query.Where(p => categoryIds.Contains(p.CategoryId));
+            }
+
+            ViewBag.Search = search;
+            ViewBag.CategoryId = categoryId;
+            ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+
+            return View(query.OrderBy(p => p.Name).ToList());
         }
 
         public IActionResult Details(int id)
@@ -32,9 +46,22 @@ namespace SomonStore.Controllers
                 .FirstOrDefault(p => p.Id == id);
 
             if (product == null)
+            {
                 return NotFound();
+            }
 
             return View(product);
+        }
+
+        private List<int> GetCategoryTreeIds(int parentId)
+        {
+            var result = new List<int> { parentId };
+            var children = _context.Categories.Where(c => c.ParentId == parentId).Select(c => c.Id).ToList();
+            foreach (var childId in children)
+            {
+                result.AddRange(GetCategoryTreeIds(childId));
+            }
+            return result;
         }
     }
 }

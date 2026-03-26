@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Заказ создан";
+}
+<div class="card border-0 shadow-sm rounded-4 p-5 text-center mx-auto" style="max-width: 680px;">
+    <h1 class="h3 mb-3">Заказ успешно создан</h1>
+    <p class="text-secondary mb-4">Номер заказа: <b>#@ViewBag.OrderId</b></p>
+    <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <a class="btn btn-dark" asp-controller="Product" asp-action="Index">Продолжить покупки</a>
+        <a class="btn btn-outline-dark" asp-controller="Home" asp-action="Index">На главную</a>
+    </div>
+</div>

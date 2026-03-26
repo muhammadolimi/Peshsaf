@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Вход";
+}
+<div class="auth-wrapper">
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 auth-card">
+        <h1 class="h3 mb-4">Вход в аккаунт</h1>
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label">Логин</label>
+                <input class="form-control" type="text" name="login" />
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Пароль</label>
+                <input class="form-control" type="password" name="password" />
+            </div>
+            <button class="btn btn-dark w-100" type="submit">Войти</button>
+        </form>
+    </div>
+</div>

@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using SomonStore.Models;
-using System.Linq;
 
 namespace SomonStore.Controllers
 {
@@ -17,6 +15,11 @@ namespace SomonStore.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (HttpContext.Session.GetInt32("UserId") != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -26,18 +29,21 @@ namespace SomonStore.Controllers
         {
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
-                ModelState.AddModelError("", "Введите логин и пароль");
+                ViewBag.Error = "Введите логин и пароль.";
                 return View();
             }
 
-            var user = _context.Users
-                .FirstOrDefault(u => u.Login == login && u.Password == password);
-
+            var user = _context.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
             if (user == null)
             {
-                ModelState.AddModelError("", "Неверный логин или пароль");
+                ViewBag.Error = "Неверный логин или пароль.";
                 return View();
             }
+
+            HttpContext.Session.SetInt32("UserId", user.Id);
+            HttpContext.Session.SetString("UserLogin", user.Login);
+            HttpContext.Session.SetString("UserName", user.Name);
+            HttpContext.Session.SetString("UserRole", user.RoleId == _context.UserRoles.First(r => r.Name == "Admin").Id ? "Admin" : "Customer");
 
             return RedirectToAction("Index", "Home");
         }
@@ -52,53 +58,49 @@ namespace SomonStore.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(User user)
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrWhiteSpace(user.Login) || string.IsNullOrWhiteSpace(user.Password) || string.IsNullOrWhiteSpace(user.Email))
+            {
+                ViewBag.Error = "Заполните логин, пароль и email.";
                 return View(user);
+            }
 
             if (_context.Users.Any(u => u.Login == user.Login))
             {
-                ModelState.AddModelError("Login", "Этот логин уже занят");
+                ViewBag.Error = "Этот логин уже занят.";
                 return View(user);
             }
 
             if (_context.Users.Any(u => u.Email == user.Email))
             {
-                ModelState.AddModelError("Email", "Этот email уже используется");
+                ViewBag.Error = "Этот email уже используется.";
                 return View(user);
             }
 
-            var customerRole = _context.UserRoles.FirstOrDefault(r => r.Name == "Customer");
-
-            if (customerRole == null)
-            {
-                customerRole = new UserRole
-                {
-                    Name = "Customer",
-                    Users = new List<User>()
-                };
-
-                _context.UserRoles.Add(customerRole);
-                _context.SaveChanges();
-            }
-
+            var customerRole = _context.UserRoles.First(r => r.Name == "Customer");
             user.RoleId = customerRole.Id;
+            user.Name = string.IsNullOrWhiteSpace(user.Name) ? user.Login : user.Name;
+            user.Phone ??= string.Empty;
+            user.Address ??= string.Empty;
             user.BonusBalance = 0;
-            user.Name ??= "NoName";
-            user.Phone ??= "";
-            user.Address ??= "";
 
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            var cart = new Cart
-            {
-                UserId = user.Id
-            };
-
-            _context.Carts.Add(cart);
+            _context.Carts.Add(new Cart { UserId = user.Id });
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Login));
+            HttpContext.Session.SetInt32("UserId", user.Id);
+            HttpContext.Session.SetString("UserLogin", user.Login);
+            HttpContext.Session.SetString("UserName", user.Name);
+            HttpContext.Session.SetString("UserRole", "Customer");
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -1,0 +1,34 @@
+@model SomonStore.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+    var currentPrice = Model.GetCurrentPrice();
+}
+<div class="row g-4">
+    <div class="col-lg-6">
+        <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "https://placehold.co/800x500?text=No+Image" : Model.ImageUrl)" class="detail-image rounded-4 shadow-sm" alt="@Model.Name" />
+    </div>
+    <div class="col-lg-6">
+        <div class="text-secondary mb-2">@Model.Category.Name</div>
+        <h1 class="display-6 fw-bold mb-3">@Model.Name</h1>
+        <p class="text-secondary">@Model.Description</p>
+        <div class="mb-2">Остаток: <b>@Model.Quantity</b></div>
+        <div class="mb-4">
+            @if (currentPrice < Model.Price)
+            {
+                <span class="display-6 fw-bold">@currentPrice.ToString("0.##") c.</span>
+                <span class="ms-2 text-decoration-line-through text-secondary">@Model.Price.ToString("0.##") c.</span>
+            }
+            else
+            {
+                <span class="display-6 fw-bold">@Model.Price.ToString("0.##") c.</span>
+            }
+        </div>
+        <form asp-controller="Cart" asp-action="Add" method="post" class="card border-0 shadow-sm rounded-4 p-3">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <label class="form-label">Количество</label>
+            <input class="form-control mb-3" type="number" name="quantity" value="1" min="1" max="99" />
+            <button class="btn btn-dark" type="submit">Добавить в корзину</button>
+        </form>
+    </div>
+</div>
