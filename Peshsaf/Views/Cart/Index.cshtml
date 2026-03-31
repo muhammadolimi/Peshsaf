@@ -1,0 +1,75 @@
+@model List<Peshsaf.Models.CartItem>
+@{
+    ViewData["Title"] = "Корзина";
+    decimal total = Model.Sum(i => i.Product.GetCurrentPrice() * i.Quantity);
+}
+<h1 class="h3 mb-4">Корзина</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-light border">Корзина пуста.</div>
+    <a class="btn btn-dark" asp-controller="Product" asp-action="Index">Перейти к товарам</a>
+}
+else
+{
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th>Цена</th>
+                                <th>Количество</th>
+                                <th>Сумма</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex gap-3 align-items-center">
+                                        <img src="@(string.IsNullOrWhiteSpace(item.Product.ImageUrl) ? "https://placehold.co/120x80?text=No+Image" : item.Product.ImageUrl)" class="cart-thumb" alt="@item.Product.Name" />
+                                        <div>
+                                            <div class="fw-semibold">@item.Product.Name</div>
+                                            <div class="small text-secondary">@item.Product.Category?.Name</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@item.Product.GetCurrentPrice().ToString("0.##") c.</td>
+                                <td>
+                                    <form asp-action="UpdateQuantity" method="post" class="d-flex gap-2 align-items-center">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <input class="form-control form-control-sm" style="width:90px" type="number" name="quantity" value="@item.Quantity" min="0" />
+                                        <button class="btn btn-outline-dark btn-sm" type="submit">Обновить</button>
+                                    </form>
+                                </td>
+                                <td>@((item.Product.GetCurrentPrice() * item.Quantity).ToString("0.##")) c.</td>
+                                <td>
+                                    <form asp-action="Delete" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button class="btn btn-outline-danger btn-sm" type="submit">Удалить</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h2 class="h5 mb-3">Итого</h2>
+                <div class="d-flex justify-content-between mb-2"><span>Товаров</span><b>@Model.Sum(i => i.Quantity)</b></div>
+                <div class="d-flex justify-content-between mb-4"><span>Сумма</span><b>@total.ToString("0.##") c.</b></div>
+                <a class="btn btn-dark" asp-controller="Order" asp-action="Checkout">Оформить заказ</a>
+            </div>
+        </div>
+    </div>
+}

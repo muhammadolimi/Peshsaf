@@ -1,0 +1,33 @@
+@model List<Peshsaf.Models.Product>
+@{
+    ViewData["Title"] = "Главная";
+    var categories = ViewBag.Categories as List<Peshsaf.Models.Category> ?? new();
+}
+
+
+<section class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 mb-0">Категории</h2>
+        <a asp-controller="Product" asp-action="Index" class="text-decoration-none">Все товары</a>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        @foreach (var category in categories)
+        {
+            <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@category.Id" class="btn btn-outline-secondary rounded-pill">@category.Name</a>
+        }
+    </div>
+</section>
+
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 mb-0">Новые товары</h2>
+    </div>
+    <div class="row g-4">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-6 col-lg-3">
+                <partial name="~/Views/Shared/_ProductCard.cshtml" model="product" />
+            </div>
+        }
+    </div>
+</section>
