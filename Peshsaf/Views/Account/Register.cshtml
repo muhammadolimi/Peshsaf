@@ -1,0 +1,43 @@
+@model Peshsaf.Models.User
+@{
+    ViewData["Title"] = "Регистрация";
+}
+<div class="auth-wrapper">
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 auth-card">
+        <h1 class="h3 mb-4">Регистрация</h1>
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Имя</label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Логин</label>
+                    <input asp-for="Login" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Телефон</label>
+                    <input asp-for="Phone" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Адрес</label>
+                    <input asp-for="Address" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Пароль</label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                </div>
+            </div>
+            <button class="btn btn-dark w-100 mt-4" type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
