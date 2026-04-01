@@ -20,5 +20,10 @@ namespace Peshsaf.Models
 
         public Cart? Cart { get; set; }
         public ICollection<Order> Orders { get; set; } = new List<Order>();
+
+        /// <summary>
+        /// Products added to this user's favourites list.  The collection may be empty.
+        /// </summary>
+        public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }

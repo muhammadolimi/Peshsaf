@@ -20,13 +20,21 @@
                 <span class="fw-bold">@Model.Price.ToString("0.##") c.</span>
             }
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap">
             <a class="btn btn-outline-dark btn-sm flex-grow-1" asp-controller="Product" asp-action="Details" asp-route-id="@Model.Id">Подробнее</a>
             <form asp-controller="Cart" asp-action="Add" method="post" class="flex-grow-1">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="productId" value="@Model.Id" />
                 <button class="btn btn-dark btn-sm w-100" type="submit">В корзину</button>
             </form>
+            @if (Context.Session.GetInt32("UserId") != null)
+            {
+                <form asp-controller="Favorites" asp-action="Add" method="post" class="flex-grow-1">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <button class="btn btn-outline-secondary btn-sm w-100" type="submit">В избранное</button>
+                </form>
+            }
         </div>
     </div>
 </div>

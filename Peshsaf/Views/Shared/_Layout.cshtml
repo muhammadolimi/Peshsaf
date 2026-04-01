@@ -8,43 +8,84 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Peshsaf</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+
+<body class="d-flex flex-column min-vh-100">
     <header class="border-bottom bg-white sticky-top">
         <nav class="navbar navbar-expand-lg container py-3">
-            <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">Peshsaf</a>
+            <a class="navbar-brand fw-bold me-4" asp-controller="Home" asp-action="Index">Peshsaf</a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="mainNav">
+                
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Главная</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Product" asp-action="Index">Товары</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Cart" asp-action="Index">Корзина</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Главная</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Product" asp-action="Index">Товары</a>
+                    </li>
+
                     @if (userRole == "Admin")
                     {
-                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Index">Админ панель</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Admin" asp-action="Index">Админ панель</a>
+                        </li>
                     }
                 </ul>
-                <div class="d-flex gap-2 align-items-center">
-                    @if (!string.IsNullOrWhiteSpace(userName))
-                    {
-                        <span class="text-secondary small">@userName (@userRole)</span>
-                        <a class="btn btn-outline-dark btn-sm" asp-controller="Account" asp-action="Logout">Выход</a>
-                    }
-                    else
-                    {
+
+                @if (!string.IsNullOrWhiteSpace(userName))
+                {
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-1" asp-controller="Cart" asp-action="Index">
+                                <i class="bi bi-cart"></i> Корзина
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-1" asp-controller="Order" asp-action="MyOrders">
+                                <i class="bi bi-box"></i> Покупки
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-1" asp-controller="Favorites" asp-action="Index">
+                                <i class="bi bi-heart"></i> Избранное
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-1" asp-controller="Profile" asp-action="Index">
+                                <i class="bi bi-person"></i> @userName
+                            </a>
+                        </li>
+
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-outline-dark btn-sm" asp-controller="Account" asp-action="Logout">Выход</a>
+                        </li>
+                    </ul>
+                }
+                else
+                {
+                    <div class="d-flex gap-2 ms-auto">
                         <a class="btn btn-outline-dark btn-sm" asp-controller="Account" asp-action="Login">Вход</a>
                         <a class="btn btn-dark btn-sm" asp-controller="Account" asp-action="Register">Регистрация</a>
-                    }
-                </div>
+                    </div>
+                }
             </div>
         </nav>
     </header>
 
-    <main class="container py-4">
+    <main class="container py-4 flex-grow-1">
         @if (TempData["AdminError"] != null)
         {
             <div class="alert alert-warning">@TempData["AdminError"]</div>
@@ -53,11 +94,39 @@
         {
             <div class="alert alert-success">@TempData["AdminSuccess"]</div>
         }
+
         @RenderBody()
     </main>
 
-    <footer class="border-top py-4 mt-4 text-center text-muted small">
-        Peshsaf • магазин электронной техники
+    <footer class="border-top bg-white mt-4">
+        <div class="container py-3">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <h6 class="fw-bold mb-1">Peshsaf</h6>
+                    <p class="text-muted small mb-0">
+                        Магазин электронной техники
+                    </p>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="text-muted small">
+                        Адрес: Авгонбозор, 13 <br>
+                        Тел: +992927708119, +9927778119, +9927703197 <br>
+                        Email: neidmine@gmail.com
+                    </div>
+                </div>
+
+                <div class="col-md-4 text-md-end">
+                    <div class="text-muted small">
+                        Пн–Вс 08:00–17:00
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center text-muted small mt-2">
+                © @DateTime.Now.Year Peshsaf
+            </div>
+        </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

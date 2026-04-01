@@ -1,0 +1,113 @@
+@model Peshsaf.Models.User
+@{
+    ViewData["Title"] = "Профиль";
+}
+<h1 class="h3 mb-4">Профиль</h1>
+
+@if (TempData["ProfileError"] != null)
+{
+    <div class="alert alert-warning">@TempData["ProfileError"]</div>
+}
+@if (TempData["ProfileSuccess"] != null)
+{
+    <div class="alert alert-success">@TempData["ProfileSuccess"]</div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 mb-4 p-4">
+    <h2 class="h5 mb-3">Личная информация</h2>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="text-secondary small">Логин</div>
+            <div>@Model.Login</div>
+        </div>
+        <div class="col-md-6">
+            <div class="text-secondary small">Роль</div>
+            <div>@Model.UserRole.Name</div>
+        </div>
+        <div class="col-md-6">
+            <div class="text-secondary small">Имя</div>
+            <div>@Model.Name</div>
+        </div>
+        <div class="col-md-6">
+            <div class="text-secondary small">Email</div>
+            <div>@Model.Email</div>
+        </div>
+        <div class="col-md-6">
+            <div class="text-secondary small">Телефон</div>
+            <div>@(string.IsNullOrWhiteSpace(Model.Phone) ? "—" : Model.Phone)</div>
+        </div>
+        <div class="col-md-6">
+            <div class="text-secondary small">Адрес</div>
+            <div>@(string.IsNullOrWhiteSpace(Model.Address) ? "—" : Model.Address)</div>
+        </div>
+        <div class="col-md-6">
+            <div class="text-secondary small">Бонусный баланс</div>
+            <div>@Model.BonusBalance.ToString("0.##") c.</div>
+        </div>
+    </div>
+    <div class="mt-4">
+        <button class="btn btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#editProfileModal">Редактировать данные</button>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+            <h3 class="h6 mb-2">Корзина</h3>
+            <p class="text-secondary small">Просмотреть товары в корзине</p>
+            <a class="btn btn-dark btn-sm" asp-controller="Cart" asp-action="Index">Перейти</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+            <h3 class="h6 mb-2">Покупки</h3>
+            <p class="text-secondary small">История оформленных заказов</p>
+            <a class="btn btn-dark btn-sm" asp-controller="Order" asp-action="MyOrders">Перейти</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+            <h3 class="h6 mb-2">Избранное</h3>
+            <p class="text-secondary small">Товары, добавленные в избранное</p>
+            <a class="btn btn-dark btn-sm" asp-controller="Favorites" asp-action="Index">Перейти</a>
+        </div>
+    </div>
+</div>
+
+<!-- Edit profile modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Редактирование профиля</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <form asp-action="UpdateProfile" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Имя</label>
+                        <input id="editName" name="name" class="form-control" value="@Model.Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input id="editEmail" name="email" class="form-control" value="@Model.Email" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Телефон</label>
+                        <input id="editPhone" name="phone" class="form-control" value="@Model.Phone" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAddress" class="form-label">Адрес</label>
+                        <input id="editAddress" name="address" class="form-control" value="@Model.Address" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-dark">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

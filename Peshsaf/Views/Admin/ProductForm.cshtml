@@ -39,6 +39,12 @@
             </div>
 
             <div class="col-md-6">
+                <label asp-for="PromotionId" class="form-label">Акция</label>
+                <select asp-for="PromotionId" asp-items="Model.Promotions" class="form-select"></select>
+                <span asp-validation-for="PromotionId" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
                 <label asp-for="ImageFile" class="form-label">Фото товара</label>
                 <input asp-for="ImageFile" type="file" class="form-control" />
                 <span asp-validation-for="ImageFile" class="text-danger small"></span>

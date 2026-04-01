@@ -20,6 +20,11 @@ namespace Peshsaf.Models
         public DbSet<PaymentMethod> PaymentMethods { get; set; } = null!;
         public DbSet<UserRole> UserRoles { get; set; } = null!;
         public DbSet<Promotion> Promotions { get; set; } = null!;
+        public DbSet<Favorite> Favorites { get; set; } = null!;
+
+        /// <summary>
+        /// DbSet of favourite items linking users with products they have marked as favourites.
+        /// </summary>
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
