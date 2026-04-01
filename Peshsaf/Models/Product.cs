@@ -19,6 +19,13 @@ namespace Peshsaf.Models
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
+        /// <summary>
+        /// Collection of users who have marked this product as favourite.  This navigation
+        /// property enables EF Core to create the many-to-many relation through the
+        /// Favourite entity.  The collection may be empty.
+        /// </summary>
+        public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
+
         public decimal GetCurrentPrice()
         {
             if (Promotion == null)

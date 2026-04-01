@@ -1,0 +1,52 @@
+@model List<Peshsaf.Models.User>
+@{
+    ViewData["Title"] = "Пользователи";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Пользователи</h1>
+        <div class="text-secondary">Управление пользователями магазина</div>
+    </div>
+    <a class="btn btn-dark" asp-action="CreateUser">Добавить пользователя</a>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Логин</th>
+                    <th>Имя</th>
+                    <th>Email</th>
+                    <th>Телефон</th>
+                    <th>Роль</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model)
+                {
+                    <tr>
+                        <td>@u.Id</td>
+                        <td>@u.Login</td>
+                        <td>@u.Name</td>
+                        <td>@u.Email</td>
+                        <td>@u.Phone</td>
+                        <td>@u.UserRole.Name</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-outline-dark btn-sm" asp-action="EditUser" asp-route-id="@u.Id">Изменить</a>
+                                <form asp-action="DeleteUser" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@u.Id" />
+                                    <button class="btn btn-outline-danger btn-sm" type="submit">Удалить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

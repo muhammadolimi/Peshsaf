@@ -23,9 +23,21 @@ namespace Peshsaf.ViewModels
         [Required]
         public int CategoryId { get; set; }
 
+        /// <summary>
+        /// Optional promotion associated with this product.  When null, the product
+        /// will not participate in any promotion.
+        /// </summary>
+        public int? PromotionId { get; set; }
+
         [Display(Name = "Фото")]
         public IFormFile? ImageFile { get; set; }
 
         public List<SelectListItem> Categories { get; set; } = new();
+
+        /// <summary>
+        /// Available promotions to choose from.  A blank value should represent no
+        /// promotion.
+        /// </summary>
+        public List<SelectListItem> Promotions { get; set; } = new();
     }
 }

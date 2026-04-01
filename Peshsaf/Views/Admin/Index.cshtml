@@ -5,9 +5,17 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h3 mb-1">Админ панель</h1>
-        <div class="text-secondary">Управление товарами магазина</div>
+        <div class="text-secondary">Управление магазином</div>
     </div>
     <a class="btn btn-dark" asp-action="CreateProduct">Добавить товар</a>
+</div>
+
+<!-- Admin navigation links -->
+<div class="mb-4 d-flex flex-wrap gap-2">
+    <a class="btn btn-outline-dark btn-sm" asp-action="Index">Товары</a>
+    <a class="btn btn-outline-dark btn-sm" asp-action="Categories">Категории</a>
+    <a class="btn btn-outline-dark btn-sm" asp-action="Promotions">Акции</a>
+    <a class="btn btn-outline-dark btn-sm" asp-action="Users">Пользователи</a>
 </div>
 
 <div class="card border-0 shadow-sm rounded-4">
